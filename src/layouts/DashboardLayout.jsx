@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { BarChart3, FileText, Clipboard, Users, TrendingUp, LogOut, Lock, Briefcase, Wrench, Bell, Settings } from 'lucide-react';
 import { AppContext } from '../context/AppContext';
 import { ROLES } from '../utils/stateMachine';
 
@@ -8,11 +9,11 @@ export default function DashboardLayout() {
   const { rolActual, setRol } = useContext(AppContext);
 
   const navigation = [
-    { name: 'Dashboard', href: '/app/dashboard', icon: '📊' },
-    { name: 'Notas', href: '/app/notas', icon: '📝' },
-    { name: 'Órdenes de Trabajo', href: '/app/ordenes', icon: '📋' },
-    { name: 'Cuadrillas', href: '/app/cuadrillas', icon: '👥' },
-    { name: 'Reportes', href: '/app/reportes', icon: '📈' },
+    { name: 'Dashboard', href: '/app/dashboard', icon: BarChart3 },
+    { name: 'Notas', href: '/app/notas', icon: FileText },
+    { name: 'Órdenes de Trabajo', href: '/app/ordenes', icon: Clipboard },
+    { name: 'Cuadrillas', href: '/app/cuadrillas', icon: Users },
+    { name: 'Reportes', href: '/app/reportes', icon: TrendingUp },
   ];
 
   const isActive = (href) => location.pathname.startsWith(href);
@@ -27,20 +28,23 @@ export default function DashboardLayout() {
         </div>
 
         <nav className="mt-6 px-4 flex-1">
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
-                isActive(item.href)
-                  ? 'bg-blue-600 text-white font-medium'
-                  : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-              }`}
-            >
-              <span className="text-lg">{item.icon}</span>
-              <span>{item.name}</span>
-            </Link>
-          ))}
+          {navigation.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
+                  isActive(item.href)
+                    ? 'bg-blue-600 text-white font-medium'
+                    : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                <IconComponent className="w-5 h-5" strokeWidth={1.5} />
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Botón Salir al pie del sidebar */}
@@ -49,7 +53,7 @@ export default function DashboardLayout() {
             to="/"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-red-600/10 hover:text-red-400 transition-colors w-full"
           >
-            <span className="text-lg">🚪</span>
+            <LogOut className="w-5 h-5" strokeWidth={1.5} />
             <span>Volver a Inicio</span>
           </Link>
         </div>
@@ -72,17 +76,17 @@ export default function DashboardLayout() {
                   onChange={(e) => setRol(e.target.value)}
                   className="px-3 py-1 border border-slate-300 rounded-lg text-sm bg-white hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value={ROLES.JEFE}>🔐 Jefe</option>
-                  <option value={ROLES.SUPERVISOR}>👔 Supervisor</option>
-                  <option value={ROLES.TECNICO}>🔧 Técnico</option>
+                  <option value={ROLES.JEFE}>Jefe</option>
+                  <option value={ROLES.SUPERVISOR}>Supervisor</option>
+                  <option value={ROLES.TECNICO}>Técnico</option>
                 </select>
               </div>
 
               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <span className="text-lg">🔔</span>
+                <Bell className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
               </button>
               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <span className="text-lg">⚙️</span>
+                <Settings className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
               </button>
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
                 U

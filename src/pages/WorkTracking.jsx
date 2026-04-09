@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Check } from 'lucide-react';
 
 // --- MOCK DATA INICIAL ---
 const orderData = {
@@ -111,7 +112,11 @@ export default function WorkTracking() {
                           ${isActive ? 'bg-blue-600 text-white ring-4 ring-blue-100' : 
                             isCompleted ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-400'}
                         `}>
-                          {isCompleted ? '✓' : step.id}
+                          {isCompleted ? (
+                            <Check className="w-5 h-5" strokeWidth={2} />
+                          ) : (
+                            step.id
+                          )}
                         </div>
                         <p className={`mt-3 text-sm font-medium ${isActive ? 'text-slate-900' : 'text-slate-500'}`}>{step.label}</p>
                       </div>

@@ -1,172 +1,243 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
+import { usePermisos } from '../hooks/usePermisos';
+import { NOTE_STATES, WORKORDER_STATES } from '../utils/stateMachine';
+import { Clipboard, Wrench, Users, BarChart3, AlertTriangle, AlertCircle, CheckCircle, TrendingUp, Clock, Check, Zap } from 'lucide-react';
 
-// --- MOCK DATA ---
-const stats = [
-  { id: 1, name: 'Notas Pendientes', value: '24', change: '+4.75%', trend: 'up', color: 'text-red-600', bg: 'bg-red-50' },
-  { id: 2, name: 'Órdenes Activas', value: '18', change: '-1.39%', trend: 'down', color: 'text-blue-600', bg: 'bg-blue-50' },
-  { id: 3, name: 'En Ejecución', value: '8', change: '+2.02%', trend: 'up', color: 'text-purple-600', bg: 'bg-purple-50' },
-  { id: 4, name: 'Finalizados (Hoy)', value: '12', change: '+10.18%', trend: 'up', color: 'text-green-600', bg: 'bg-green-50' },
-  { id: 5, name: 'Cuadrillas Trabajando', value: '5/6', change: '83% Capacidad', trend: 'neutral', color: 'text-orange-600', bg: 'bg-orange-50' },
-];
-
-const recentActivity = [
-  { id: 'OT-1042', title: 'Reemplazo Luminaria LED', location: 'Av. Mate de Luna 2400', crew: 'Unidad 4 (Grúa)', status: 'EN EJECUCIÓN', date: 'Hoy, 09:30' },
-  { id: 'OT-1043', title: 'Poste Inclinado', location: 'Calle San Martín 150', crew: 'Unidad 2', status: 'PENDIENTE', date: 'Hoy, 08:15' },
-  { id: 'OT-1040', title: 'Cable Cortocircuito', location: 'Barrio Sur', crew: 'Unidad 1', status: 'CERRADO', date: 'Ayer, 16:45' },
-  { id: 'OT-1041', title: 'Tablero Vandalizado', location: 'Plaza Independencia', crew: 'Unidad 3', status: 'EN EJECUCIÓN', date: 'Ayer, 14:20' },
-];
-
-const weeklyData = [
-  { day: 'Lun', reportados: 12, resueltos: 10 },
-  { day: 'Mar', reportados: 15, resueltos: 14 },
-  { day: 'Mié', reportados: 8, resueltos: 12 },
-  { day: 'Jue', reportados: 20, resueltos: 15 },
-  { day: 'Vie', reportados: 14, resueltos: 18 },
-  { day: 'Sáb', reportados: 5, resueltos: 8 },
-  { day: 'Dom', reportados: 3, resueltos: 4 },
-];
-
-// --- UI COMPONENTS ---
-const Badge = ({ status }) => {
-  const styles = {
-    'PENDIENTE': 'bg-gray-100 text-gray-800 border-gray-200',
-    'EN EJECUCIÓN': 'bg-blue-100 text-blue-800 border-blue-200',
-    'CERRADO': 'bg-green-100 text-green-800 border-green-200',
-  };
-  return (
-    <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${styles[status] || styles['PENDIENTE']}`}>
-      {status}
-    </span>
-  );
-};
-
-const Icons = {
-  Up: () => <svg className="w-3 h-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>,
-  Down: () => <svg className="w-3 h-3 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>,
-};
-
-// --- MAIN DASHBOARD COMPONENT ---
 export default function Dashboard() {
-  const [filter, setFilter] = useState('ALL');
+  const { notes, workOrders, crews, rolActual } = useContext(AppContext);
+  const { puedoVerReportes } = usePermisos();
+
+  // Calcular estadísticas
+  const totalNotas = notes.length;
+  const notasPendientes = notes.filter(n => n.status === NOTE_STATES.PENDIENTE_ANALISIS).length;
+  const notasAnalizadas = notes.filter(n => n.status === NOTE_STATES.ANALIZADA).length;
+  const notasCompletadas = notes.filter(n => n.status === NOTE_STATES.COMPLETADA).length;
+
+  const totalOT = workOrders.length;
+  const otPendientes = workOrders.filter(ot => ot.status === WORKORDER_STATES.PENDIENTE_ASIGNACION).length;
+  const otEnEjecucion = workOrders.filter(ot => ot.status === WORKORDER_STATES.EN_EJECUCION).length;
+  const otCompletadas = workOrders.filter(ot => ot.status === WORKORDER_STATES.COMPLETADA).length;
+
+  const cuadrillasActivas = crews.filter(c => c.status === 'En Actividad').length;
+  const cuadrillasDisponibles = crews.filter(c => c.status === 'Disponible').length;
+
+  // Notas por prioridad
+  const notasAlta = notes.filter(n => n.priority === 'Alta').length;
+  const notasMedia = notes.filter(n => n.priority === 'Media').length;
+  const notasBaja = notes.filter(n => n.priority === 'Baja').length;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans">
-      <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Resumen Operativo</h1>
-            <p className="text-sm text-slate-500 mt-1">Mantenimiento Urbano - Estado en tiempo real</p>
+    <div className="p-8 bg-slate-50 min-h-screen">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-slate-900">Dashboard URBANMANT</h1>
+        <p className="text-slate-600 mt-2">Resumen en tiempo real del sistema de gestión de mantenimiento urbano</p>
+        <p className="text-sm text-slate-500 mt-1">👤 Sesión: <span className="font-bold text-blue-600">{rolActual}</span></p>
+      </div>
+
+      {/* KPIs Grid - Primera Fila */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        {/* Total de Notas */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">Total Notas</p>
+              <p className="text-3xl font-bold text-blue-600">{totalNotas}</p>
+            </div>
+            <Clipboard className="w-10 h-10 text-blue-600" strokeWidth={1.5} />
           </div>
-          <div className="mt-4 md:mt-0 flex space-x-3">
-            <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
-              Exportar Reporte
-            </button>
-            <button className="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm">
-              + Nueva Nota EP/e
-            </button>
-          </div>
+          <p className="text-xs text-slate-500 mt-3 flex items-center gap-1">
+            <Clock className="w-3 h-3" /> {notasPendientes} pendientes | <Check className="w-3 h-3" /> {notasCompletadas} completadas
+          </p>
         </div>
 
-        {/* KPIs Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {stats.map((stat) => (
-            <div key={stat.id} className="bg-white rounded-xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-slate-500 truncate">{stat.name}</p>
-                <div className={`p-2 rounded-lg ${stat.bg} ${stat.color}`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-              </div>
-              <div className="mt-4 flex items-baseline justify-between">
-                <p className="text-2xl font-semibold text-slate-900">{stat.value}</p>
-                <div className="flex items-center space-x-1 text-sm font-medium text-slate-500">
-                  {stat.trend === 'up' && <Icons.Up />}
-                  {stat.trend === 'down' && <Icons.Down />}
-                  <span>{stat.change}</span>
-                </div>
-              </div>
+        {/* Órdenes de Trabajo */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">Órdenes Trabajo</p>
+              <p className="text-3xl font-bold text-orange-600">{totalOT}</p>
             </div>
-          ))}
+            <Wrench className="w-10 h-10 text-orange-600" strokeWidth={1.5} />
+          </div>
+          <p className="text-xs text-slate-500 mt-3 flex items-center gap-1">
+            <Zap className="w-3 h-3" /> {otEnEjecucion} en ejecución | <Check className="w-3 h-3" /> {otCompletadas} completadas
+          </p>
         </div>
 
-        {/* Charts & Tables Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Simple CSS Bar Chart */}
-          <div className="lg:col-span-1 bg-white rounded-xl border border-slate-100 shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4">Balance Semanal</h2>
-            <div className="h-64 flex items-end justify-between space-x-2">
-              {weeklyData.map((data, index) => {
-                const maxVal = Math.max(...weeklyData.map(d => Math.max(d.reportados, d.resueltos)));
-                const repHeight = `${(data.reportados / maxVal) * 100}%`;
-                const resHeight = `${(data.resueltos / maxVal) * 100}%`;
-                
-                return (
-                  <div key={index} className="flex flex-col items-center flex-1 space-y-2 group">
-                    <div className="flex w-full justify-center space-x-1 h-48 items-end">
-                      <div style={{ height: repHeight }} className="w-1/2 bg-slate-200 rounded-t-sm group-hover:bg-slate-300 transition-colors" title={`Reportados: ${data.reportados}`}></div>
-                      <div style={{ height: resHeight }} className="w-1/2 bg-blue-500 rounded-t-sm group-hover:bg-blue-600 transition-colors" title={`Resueltos: ${data.resueltos}`}></div>
-                    </div>
-                    <span className="text-xs font-medium text-slate-400">{data.day}</span>
-                  </div>
-                );
-              })}
+        {/* Cuadrillas */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">Cuadrillas</p>
+              <p className="text-3xl font-bold text-green-600">{crews.length}</p>
             </div>
-            <div className="mt-4 flex justify-center space-x-4 text-xs font-medium text-slate-500">
-              <div className="flex items-center"><span className="w-3 h-3 bg-slate-200 rounded-full mr-2"></span> Reportados</div>
-              <div className="flex items-center"><span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span> Resueltos</div>
-            </div>
+            <Users className="w-10 h-10 text-green-600" strokeWidth={1.5} />
           </div>
+          <p className="text-xs text-slate-500 mt-3 flex items-center gap-1">
+            <AlertCircle className="w-3 h-3 text-red-500" /> {cuadrillasActivas} activas | <CheckCircle className="w-3 h-3 text-green-500" /> {cuadrillasDisponibles} disponibles
+          </p>
+        </div>
 
-          {/* Recent Activity Table */}
-          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-slate-800">Actividad Reciente</h2>
-              <button className="text-sm font-medium text-blue-600 hover:text-blue-800">Ver todas →</button>
+        {/* Eficiencia */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">Eficiencia</p>
+              <p className="text-3xl font-bold text-purple-600">
+                {totalNotas > 0 ? Math.round((notasCompletadas / totalNotas) * 100) : 0}%
+              </p>
             </div>
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-left text-sm whitespace-nowrap">
-                <thead className="bg-slate-50 text-slate-500">
-                  <tr>
-                    <th className="px-6 py-4 font-medium">ID / Tarea</th>
-                    <th className="px-6 py-4 font-medium">Ubicación</th>
-                    <th className="px-6 py-4 font-medium">Cuadrilla</th>
-                    <th className="px-6 py-4 font-medium">Estado</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700">
-                  {recentActivity.map((item, index) => (
-                    <tr key={index} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4">
-                        <p className="font-semibold text-slate-900">{item.id}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{item.title}</p>
-                      </td>
-                      <td className="px-6 py-4">{item.location}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-xs">
-                            {item.crew.charAt(0)}
-                          </div>
-                          <span>{item.crew}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge status={item.status} />
-                        <p className="text-xs text-slate-400 mt-1">{item.date}</p>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <BarChart3 className="w-10 h-10 text-purple-600" strokeWidth={1.5} />
           </div>
+          <p className="text-xs text-slate-500 mt-3">
+            Notas resueltas vs totales
+          </p>
+        </div>
 
+        {/* Tiempo Promedio */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">Estado</p>
+              <p className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                {otPendientes > 0 ? (
+                  <><AlertTriangle className="w-5 h-5 text-yellow-600" /> Crítico</>
+                ) : (
+                  <><CheckCircle className="w-5 h-5 text-green-600" /> Normal</>
+                )}
+              </p>
+            </div>
+            <TrendingUp className="w-10 h-10 text-slate-600" strokeWidth={1.5} />
+          </div>
+          <p className="text-xs text-slate-500 mt-3">
+            {otPendientes} OT sin asignar
+          </p>
         </div>
       </div>
+
+      {/* Segunda Fila - Distribución por Prioridad */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {/* Prioridad Alta */}
+        <div className="bg-linear-to-br from-red-50 to-red-100 rounded-lg shadow-sm border border-red-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-red-900 flex items-center gap-2">
+              <AlertCircle className="w-5 h-5" /> Prioridad Alta
+            </h3>
+            <span className="text-2xl font-bold text-red-600">{notasAlta}</span>
+          </div>
+          <div className="w-full bg-red-200 rounded-full h-2">
+            <div
+              className="bg-red-600 h-2 rounded-full"
+              style={{ width: `${totalNotas > 0 ? (notasAlta / totalNotas) * 100 : 0}%` }}
+            ></div>
+          </div>
+          <p className="text-xs text-red-700 mt-2">Requieren atención inmediata</p>
+        </div>
+
+        {/* Prioridad Media */}
+        <div className="bg-linear-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-sm border border-yellow-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-yellow-900 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5" /> Prioridad Media
+            </h3>
+            <span className="text-2xl font-bold text-yellow-600">{notasMedia}</span>
+          </div>
+          <div className="w-full bg-yellow-200 rounded-full h-2">
+            <div
+              className="bg-yellow-600 h-2 rounded-full"
+              style={{ width: `${totalNotas > 0 ? (notasMedia / totalNotas) * 100 : 0}%` }}
+            ></div>
+          </div>
+          <p className="text-xs text-yellow-700 mt-2">Planificación normal</p>
+        </div>
+
+        {/* Prioridad Baja */}
+        <div className="bg-linear-to-br from-green-50 to-green-100 rounded-lg shadow-sm border border-green-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-green-900 flex items-center gap-2">
+              <CheckCircle className="w-5 h-5" /> Prioridad Baja
+            </h3>
+            <span className="text-2xl font-bold text-green-600">{notasBaja}</span>
+          </div>
+          <div className="w-full bg-green-200 rounded-full h-2">
+            <div
+              className="bg-green-600 h-2 rounded-full"
+              style={{ width: `${totalNotas > 0 ? (notasBaja / totalNotas) * 100 : 0}%` }}
+            ></div>
+          </div>
+          <p className="text-xs text-green-700 mt-2">Mantenimiento preventivo</p>
+        </div>
+      </div>
+
+      {/* Tercera Fila - Estados de Notas y OT */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Estado de Notas */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+          <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <Clipboard className="w-5 h-5" /> Distribución de Notas
+          </h3>
+          <div className="space-y-4">
+            {[
+              { label: NOTE_STATES.REGISTRADA, value: notes.filter(n => n.status === NOTE_STATES.REGISTRADA).length, color: 'bg-blue-500' },
+              { label: NOTE_STATES.PENDIENTE_ANALISIS, value: notasPendientes, color: 'bg-yellow-500' },
+              { label: NOTE_STATES.ANALIZADA, value: notasAnalizadas, color: 'bg-purple-500' },
+              { label: NOTE_STATES.COMPLETADA, value: notasCompletadas, color: 'bg-green-500' }
+            ].map((item, idx) => (
+              <div key={idx}>
+                <div className="flex justify-between items-center mb-1">
+                  <p className="text-sm font-medium text-slate-700">{item.label}</p>
+                  <span className="text-sm font-bold text-slate-900">{item.value}</span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div
+                    className={`${item.color} h-2 rounded-full transition-all`}
+                    style={{ width: `${totalNotas > 0 ? (item.value / totalNotas) * 100 : 0}%` }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Estado de Órdenes de Trabajo */}
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+          <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <Wrench className="w-5 h-5" /> Distribución de Órdenes
+          </h3>
+          <div className="space-y-4">
+            {[
+              { label: WORKORDER_STATES.PENDIENTE_ASIGNACION, value: otPendientes, color: 'bg-red-500' },
+              { label: WORKORDER_STATES.ASIGNADA, value: workOrders.filter(ot => ot.status === WORKORDER_STATES.ASIGNADA).length, color: 'bg-yellow-500' },
+              { label: WORKORDER_STATES.EN_EJECUCION, value: otEnEjecucion, color: 'bg-blue-500' },
+              { label: WORKORDER_STATES.COMPLETADA, value: otCompletadas, color: 'bg-green-500' }
+            ].map((item, idx) => (
+              <div key={idx}>
+                <div className="flex justify-between items-center mb-1">
+                  <p className="text-sm font-medium text-slate-700">{item.label}</p>
+                  <span className="text-sm font-bold text-slate-900">{item.value}</span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div
+                    className={`${item.color} h-2 rounded-full transition-all`}
+                    style={{ width: `${totalOT > 0 ? (item.value / totalOT) * 100 : 0}%` }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Nota al pie */}
+      {puedoVerReportes && (
+        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-900">
+            <strong>💡 Información:</strong> Las estadísticas se actualizan en tiempo real según los cambios de estado en notas y órdenes de trabajo.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

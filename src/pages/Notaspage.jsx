@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CheckCircle } from 'lucide-react';
 import { AppContext } from '../context/AppContext';
 import { usePermisos } from '../hooks/usePermisos';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-import { NOTE_STATES, WORKORDER_STATES, obtenerProgreso } from '../utils/stateMachine';
+import { NOTE_STATES, obtenerProgreso } from '../utils/stateMachine';
 
 export default function NotasPage() {
   const navigate = useNavigate();
@@ -12,177 +13,115 @@ export default function NotasPage() {
   const { puedoAnalizarNota, puedoGenerarOT, rolActual } = usePermisos();
   const [filtroEstado, setFiltroEstado] = useState('Todos');
 
-  // Filtrar notas
-  const notasFiltradas =
-    filtroEstado === 'Todos'
-      ? notes
-      : notes.filter((n) => n.status === filtroEstado);
+  const notasFiltradas = filtroEstado === 'Todos' ? notes : notes.filter(n => n.status === filtroEstado);
 
-  // Mapear colores según prioridad
+  // Mapear los estados a colores para el badge
   const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'Alta':
-        return 'bg-red-100 text-red-700';
-      case 'Media':
-        return 'bg-yellow-100 text-yellow-700';
-      default:
-        return 'bg-green-100 text-green-700';
-    }
+    if (priority === 'Alta') return 'bg-red-100 text-red-700';
+    if (priority === 'Media') return 'bg-yellow-100 text-yellow-700';
+    return 'bg-green-100 text-green-700';
   };
 
-  // Mapear colores según estado
+  // Mapear los estados a colores para el borde del card
   const getStatusColor = (status) => {
-    switch (status) {
-      case NOTE_STATES.REGISTRADA:
-        return 'bg-blue-50 border-l-4 border-blue-500';
-      case NOTE_STATES.PENDIENTE_ANALISIS:
-        return 'bg-yellow-50 border-l-4 border-yellow-500';
-      case NOTE_STATES.ANALIZADA:
-        return 'bg-purple-50 border-l-4 border-purple-500';
-      case NOTE_STATES.GENERANDO_OT:
-        return 'bg-orange-50 border-l-4 border-orange-500';
-      case NOTE_STATES.COMPLETADA:
-        return 'bg-green-50 border-l-4 border-green-500';
-      default:
-        return 'bg-gray-50 border-l-4 border-gray-500';
-    }
+    const colors = {
+      'Registrada': 'bg-blue-50 border-l-4 border-blue-500',
+      'Pendiente Análisis': 'bg-yellow-50 border-l-4 border-yellow-500',
+      'Analizada': 'bg-purple-50 border-l-4 border-purple-500',
+      'Generando OT': 'bg-orange-50 border-l-4 border-orange-500',
+      'Completada': 'bg-green-50 border-l-4 border-green-500'
+    };
+    return colors[status] || 'bg-gray-50 border-l-4 border-gray-500';
   };
 
-  // Adelantar estado de nota
+  // Función para adelantar el estado de la nota (solo para demo, en producción se haría con acciones específicas)
   const handleAdelantarEstado = (noteId, estadoActual) => {
-    const estadoSiguiente = {
-      [NOTE_STATES.REGISTRADA]: NOTE_STATES.PENDIENTE_ANALISIS,
-      [NOTE_STATES.PENDIENTE_ANALISIS]: NOTE_STATES.ANALIZADA,
-      [NOTE_STATES.ANALIZADA]: NOTE_STATES.GENERANDO_OT,
-      [NOTE_STATES.GENERANDO_OT]: NOTE_STATES.COMPLETADA
-    }[estadoActual];
-
-    if (estadoSiguiente) {
-      actualizarEstadoNota(noteId, estadoSiguiente);
-    }
+    const transiciones = {
+      'Registrada': 'Pendiente Análisis',
+      'Pendiente Análisis': 'Analizada',
+      'Analizada': 'Generando OT',
+      'Generando OT': 'Completada'
+    };
+    const siguiente = transiciones[estadoActual];
+    if (siguiente) actualizarEstadoNota(noteId, siguiente);
   };
 
-  // Generar Orden de Trabajo
+  // Función para generar una orden de trabajo a partir de una nota
   const handleGenerarOT = (nota) => {
-    const nuevaOT = {
+    crearOrdenTrabajo({
       noteId: nota.id,
       description: nota.description,
       location: nota.location,
       priority: nota.priority
-    };
-
-    crearOrdenTrabajo(nuevaOT);
-    actualizarEstadoNota(nota.id, NOTE_STATES.GENERANDO_OT);
-
-    // Mostrar confirmación
-    alert('✅ Orden de Trabajo creada exitosamente');
+    });
+    actualizarEstadoNota(nota.id, 'Generando OT');
+    alert('Orden de Trabajo creada exitosamente');
     navigate('/app/ordenes');
   };
 
   return (
     <div className="p-8 bg-slate-50 min-h-screen">
-      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Gestión de Notas EP/e</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Total: {notasFiltradas.length} | Rol: <span className="font-medium">{rolActual}</span>
-          </p>
+          <p className="text-sm text-slate-500 mt-1">Total: {notasFiltradas.length} | Rol: {rolActual}</p>
         </div>
         {puedoAnalizarNota && (
-          <Button
-            onClick={() => navigate('/app/notas/crear')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
-          >
+          <Button onClick={() => navigate('/app/notas/crear')} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
             + Nueva Nota
           </Button>
         )}
       </div>
 
-      {/* Filtros */}
       <div className="mb-6 flex gap-2 flex-wrap">
-        {[
-          'Todos',
-          NOTE_STATES.REGISTRADA,
-          NOTE_STATES.PENDIENTE_ANALISIS,
-          NOTE_STATES.ANALIZADA,
-          NOTE_STATES.COMPLETADA
-        ].map((estado) => (
+        {['Todos', 'Registrada', 'Pendiente Análisis', 'Analizada', 'Completada'].map((estado) => (
           <button
             key={estado}
             onClick={() => setFiltroEstado(estado)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              filtroEstado === estado
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-            }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium ${filtroEstado === estado ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200'}`}
           >
             {estado}
           </button>
         ))}
       </div>
 
-      {/* Lista de Notas */}
       <div className="space-y-4">
         {notasFiltradas.length === 0 ? (
-          <div className="bg-white rounded-lg p-8 text-center text-slate-500">
-            <p>No hay notas en este estado</p>
-          </div>
+          <div className="bg-white rounded-lg p-8 text-center text-slate-500">No hay notas en este estado</div>
         ) : (
           notasFiltradas.map((nota) => (
-            <div
-              key={nota.id}
-              className={`bg-white rounded-lg shadow-sm border border-slate-200 p-6 transition-all hover:shadow-md ${getStatusColor(nota.status)}`}
-            >
+            <div key={nota.id} className={`bg-white rounded-lg shadow-sm border border-slate-200 p-6 ${getStatusColor(nota.status)}`}>
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-lg font-bold text-slate-900">{nota.id}</h3>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(
-                        nota.priority
-                      )}`}
-                    >
-                      {nota.priority}
-                    </span>
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
-                      {nota.status}
-                    </span>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(nota.priority)}`}>{nota.priority}</span>
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">{nota.status}</span>
                   </div>
                   <p className="text-sm text-slate-600 mb-3">{nota.description}</p>
                   <div className="grid grid-cols-2 gap-4 text-sm text-slate-600">
-                    <div>
-                      <span className="font-medium text-slate-700">EP/e:</span> {nota.epName}
-                    </div>
-                    <div>
-                      <span className="font-medium text-slate-700">Ubicación:</span> {nota.location.address}
-                    </div>
-                    <div>
-                      <span className="font-medium text-slate-700">Teléfono:</span> {nota.epPhone}
-                    </div>
-                    <div>
-                      <span className="font-medium text-slate-700">Zona:</span> {nota.location.zone}
-                    </div>
+                    <div><span className="font-medium">EP/e:</span> {nota.epName}</div>
+                    <div><span className="font-medium">Ubicación:</span> {nota.location.address}</div>
+                    <div><span className="font-medium">Teléfono:</span> {nota.epPhone}</div>
+                    <div><span className="font-medium">Zona:</span> {nota.location.zone}</div>
                   </div>
                 </div>
 
-                {/* Progreso */}
                 <div className="ml-6 w-32">
                   <div className="text-right mb-2">
                     <span className="text-xl font-bold text-blue-600">{obtenerProgreso(nota.status, 'nota')}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className="bg-blue-600 h-2 rounded-full transition-all"
-                      style={{ width: `${obtenerProgreso(nota.status, 'nota')}%` }}
-                    ></div>
+                      className="bg-blue-600 h-2 rounded-full"
+                      style={{width:  `${obtenerProgreso(nota.status, 'nota')}%`}}
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Acciones según rol */}
               <div className="flex gap-3 justify-end pt-4 border-t border-slate-200">
-                {puedoAnalizarNota && nota.status === NOTE_STATES.REGISTRADA && (
+                {puedoAnalizarNota && nota.status === 'Registrada' && (
                   <Button
                     onClick={() => handleAdelantarEstado(nota.id, nota.status)}
                     className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-medium text-sm"
@@ -191,7 +130,7 @@ export default function NotasPage() {
                   </Button>
                 )}
 
-                {puedoAnalizarNota && nota.status === NOTE_STATES.PENDIENTE_ANALISIS && (
+                {puedoAnalizarNota && nota.status === 'Pendiente Análisis' && (
                   <Button
                     onClick={() => handleAdelantarEstado(nota.id, nota.status)}
                     className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded font-medium text-sm"
@@ -200,13 +139,14 @@ export default function NotasPage() {
                   </Button>
                 )}
 
-                {puedoGenerarOT && nota.status === NOTE_STATES.ANALIZADA && (
+                {puedoGenerarOT && nota.status === 'Analizada' && (
                   <>
                     <Button
                       onClick={() => handleGenerarOT(nota)}
-                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium text-sm"
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium text-sm flex items-center gap-2"
                     >
-                      ✓ Generar O.T.
+                      <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
+                      Generar O.T.
                     </Button>
                     <Button
                       onClick={() => handleAdelantarEstado(nota.id, nota.status)}
@@ -217,7 +157,7 @@ export default function NotasPage() {
                   </>
                 )}
 
-                {nota.status === NOTE_STATES.COMPLETADA && (
+                {nota.status === 'Completada' && (
                   <Button
                     onClick={() => navigate(`/app/notas/${nota.id}`)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-sm"
