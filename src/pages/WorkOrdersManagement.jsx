@@ -130,24 +130,24 @@ export default function WorkOrdersManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans">
+    <div className="min-h-screen bg-slate-50 p-4 md:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Control de Órdenes de Trabajo</h1>
-            <p className="text-sm text-slate-500 mt-1">Seguimiento y asignación de cuadrillas en campo</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Control de Órdenes de Trabajo</h1>
+            <p className="text-xs md:text-sm text-slate-500 mt-1">Seguimiento y asignación de cuadrillas en campo</p>
           </div>
         </div>
 
         {/* Tabla de Órdenes */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap">
+            <table className="w-full text-left text-xs md:text-sm whitespace-nowrap">
               <thead className="bg-slate-50 text-slate-600 border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4 font-semibold">ID O.T.</th>
+                  <th className="px-3 md:px-6 py-3 md:py-4 font-semibold">ID O.T.</th>
                   <th className="px-6 py-4 font-semibold">Cuadrilla Asignada</th>
                   <th className="px-6 py-4 font-semibold">Inicio Programado</th>
                   <th className="px-6 py-4 font-semibold">Tiempo Est.</th>

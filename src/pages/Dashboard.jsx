@@ -28,24 +28,24 @@ export default function Dashboard() {
   const notasBaja = notes.filter(n => n.priority === 'Baja').length;
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900">Dashboard URBANMANT</h1>
-        <p className="text-slate-600 mt-2">Resumen en tiempo real del sistema de gestión de mantenimiento urbano</p>
-        <p className="text-sm text-slate-500 mt-1">👤 Sesión: <span className="font-bold text-blue-600">{rolActual}</span></p>
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-4xl font-bold text-slate-900">Dashboard URBANMANT</h1>
+        <p className="text-xs md:text-sm text-slate-600 mt-1 md:mt-2">Resumen en tiempo real del sistema de gestión de mantenimiento urbano</p>
+        <p className="text-xs text-slate-500 mt-1">👤 Sesión: <span className="font-bold text-blue-600">{rolActual}</span></p>
       </div>
 
       {/* KPIs Grid - Primera Fila */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
         {/* Total de Notas */}
-        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600 mb-1">Total Notas</p>
-              <p className="text-3xl font-bold text-blue-600">{totalNotas}</p>
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4 md:p-6 hover:shadow-md transition-all">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs md:text-sm font-medium text-slate-600 mb-1">Total Notas</p>
+              <p className="text-2xl md:text-3xl font-bold text-blue-600">{totalNotas}</p>
             </div>
-            <Clipboard className="w-10 h-10 text-blue-600" strokeWidth={1.5} />
+            <Clipboard className="w-8 md:w-10 h-8 md:h-10 text-blue-600 shrink-0" strokeWidth={1.5} />
           </div>
           <p className="text-xs text-slate-500 mt-3 flex items-center gap-1">
             <Clock className="w-3 h-3" /> {notasPendientes} pendientes | <Check className="w-3 h-3" /> {notasCompletadas} completadas

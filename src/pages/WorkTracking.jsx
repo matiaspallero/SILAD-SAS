@@ -63,19 +63,19 @@ export default function WorkTracking() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans">
+    <div className="min-h-screen bg-slate-50 p-4 md:p-6 lg:p-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-6">
         
         {/* Header de la Orden */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
-            <div className="flex items-center space-x-3 mb-1">
-              <h1 className="text-2xl font-bold text-slate-900">Seguimiento: {orderData.id}</h1>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold border ${currentStep === 4 ? 'bg-green-100 text-green-800 border-green-200' : 'bg-blue-100 text-blue-800 border-blue-200'}`}>
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex-1">
+            <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+              <h1 className="text-xl md:text-2xl font-bold text-slate-900">Seguimiento: {orderData.id}</h1>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap ${currentStep === 4 ? 'bg-green-100 text-green-800 border-green-200' : 'bg-blue-100 text-blue-800 border-blue-200'}`}>
                 {timelineSteps[currentStep - 1].label.toUpperCase()}
               </span>
             </div>
-            <p className="text-slate-500">{orderData.location} • {orderData.problem}</p>
+            <p className="text-xs md:text-sm text-slate-500">{orderData.location} • {orderData.problem}</p>
           </div>
           <div className="mt-4 md:mt-0 flex space-x-3">
             <button 

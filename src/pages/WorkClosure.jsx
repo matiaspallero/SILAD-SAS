@@ -18,14 +18,14 @@ const CertificateModal = ({ data, observations, onClose }) => {
   if (!data) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 md:p-8">
-      <div className="bg-white shadow-2xl w-full max-w-3xl flex flex-col max-h-full">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-2 md:p-4 lg:p-8">
+      <div className="bg-white shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] md:max-h-full rounded-xl overflow-hidden">
         
         {/* Barra de Herramientas del Documento */}
-        <div className="bg-slate-100 px-6 py-3 border-b border-slate-200 flex justify-between items-center print:hidden">
-          <p className="text-sm font-medium text-slate-600">Vista Previa de Documento</p>
-          <div className="flex space-x-3">
-            <button onClick={onClose} className="px-4 py-2 bg-white border border-slate-300 rounded text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
+        <div className="bg-slate-100 px-4 md:px-6 py-3 border-b border-slate-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 print:hidden">
+          <p className="text-xs md:text-sm font-medium text-slate-600">Vista Previa de Documento</p>
+          <div className="flex gap-2 sm:gap-3">
+            <button onClick={onClose} className="px-3 md:px-4 py-2 bg-white border border-slate-300 rounded text-xs md:text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer whitespace-nowrap">
               Cerrar
             </button>
             <button 

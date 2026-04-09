@@ -60,14 +60,14 @@ export default function NotasPage() {
   };
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Gestión de Notas EP/e</h1>
-          <p className="text-sm text-slate-500 mt-1">Total: {notasFiltradas.length} | Rol: {rolActual}</p>
+    <div className="p-4 md:p-8 bg-slate-50 min-h-screen">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-0 md:justify-between md:items-center mb-6 md:mb-8">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Gestión de Notas EP/e</h1>
+          <p className="text-xs md:text-sm text-slate-500 mt-1">Total: {notasFiltradas.length} | Rol: {rolActual}</p>
         </div>
         {puedoAnalizarNota && (
-          <Button onClick={() => navigate('/app/notas/crear')} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium cursor-pointer">
+          <Button onClick={() => navigate('/app/notas/crear')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 rounded-lg font-medium cursor-pointer whitespace-nowrap">
             + Nueva Nota
           </Button>
         )}
@@ -78,7 +78,7 @@ export default function NotasPage() {
           <button
             key={estado}
             onClick={() => setFiltroEstado(estado)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium cursor-pointer ${filtroEstado === estado ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200'}`}
+            className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer whitespace-nowrap ${filtroEstado === estado ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200'}`}
           >
             {estado}
           </button>
@@ -87,16 +87,16 @@ export default function NotasPage() {
 
       <div className="space-y-4">
         {notasFiltradas.length === 0 ? (
-          <div className="bg-white rounded-lg p-8 text-center text-slate-500">No hay notas en este estado</div>
+          <div className="bg-white rounded-lg p-6 md:p-8 text-center text-slate-500">No hay notas en este estado</div>
         ) : (
           notasFiltradas.map((nota) => (
-            <div key={nota.id} className={`bg-white rounded-lg shadow-sm border border-slate-200 p-6 ${getStatusColor(nota.status)}`}>
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-slate-900">{nota.id}</h3>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(nota.priority)}`}>{nota.priority}</span>
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">{nota.status}</span>
+            <div key={nota.id} className={`bg-white rounded-lg shadow-sm border border-slate-200 p-4 md:p-6 ${getStatusColor(nota.status)}`}>
+              <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 md:gap-0 mb-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
+                    <h3 className="text-base md:text-lg font-bold text-slate-900 shrink-0">{nota.id}</h3>
+                    <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(nota.priority)}`}>{nota.priority}</span>
+                    <span className="px-2 md:px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">{nota.status}</span>
                   </div>
                   <p className="text-sm text-slate-600 mb-3">{nota.description}</p>
                   <div className="grid grid-cols-2 gap-4 text-sm text-slate-600">

@@ -10,17 +10,17 @@ export default function Reportes() {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Reportes y Estadísticas</h1>
-        <Button variant="primary" className="flex items-center gap-2 cursor-pointer">
+    <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-0 md:justify-between md:items-center mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Reportes y Estadísticas</h1>
+        <Button variant="primary" className="flex items-center gap-2 cursor-pointer whitespace-nowrap">
           <BarChart3 className="w-4 h-4" strokeWidth={1.5} />
           Generar Reporte
         </Button>
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
         <Card 
           title="Órdenes Pendientes" 
           value={mockData.kpis.pendientes}
