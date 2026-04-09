@@ -8,11 +8,11 @@ export default function DashboardLayout() {
   const { rolActual, setRol } = useContext(AppContext);
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: '📊' },
-    { name: 'Notas', href: '/notas', icon: '📝' },
-    { name: 'Órdenes de Trabajo', href: '/ordenes', icon: '📋' },
-    { name: 'Cuadrillas', href: '/cuadrillas', icon: '👥' },
-    { name: 'Reportes', href: '/reportes', icon: '📈' },
+    { name: 'Dashboard', href: '/app/dashboard', icon: '📊' },
+    { name: 'Notas', href: '/app/notas', icon: '📝' },
+    { name: 'Órdenes de Trabajo', href: '/app/ordenes', icon: '📋' },
+    { name: 'Cuadrillas', href: '/app/cuadrillas', icon: '👥' },
+    { name: 'Reportes', href: '/app/reportes', icon: '📈' },
   ];
 
   const isActive = (href) => location.pathname.startsWith(href);
@@ -26,7 +26,7 @@ export default function DashboardLayout() {
           <p className="text-xs text-gray-500 mt-1">Sistema de Gestión de Obras</p>
         </div>
 
-        <nav className="mt-6 px-4">
+        <nav className="mt-6 px-4 flex-1">
           {navigation.map((item) => (
             <Link
               key={item.href}
@@ -42,6 +42,17 @@ export default function DashboardLayout() {
             </Link>
           ))}
         </nav>
+
+        {/* Botón Salir al pie del sidebar */}
+        <div className="px-4 pb-6 border-t border-slate-700 pt-4">
+          <Link
+            to="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-red-600/10 hover:text-red-400 transition-colors w-full"
+          >
+            <span className="text-lg">🚪</span>
+            <span>Volver a Inicio</span>
+          </Link>
+        </div>
       </aside>
 
       {/* Main Content */}

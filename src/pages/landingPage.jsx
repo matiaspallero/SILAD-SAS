@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   CheckCircle2, 
@@ -23,127 +24,137 @@ const staggerContainer = {
   }
 };
 
-const Header = () => (
-  <motion.header 
-    initial={{ y: -100 }}
-    animate={{ y: 0 }}
-    transition={{ type: "spring", stiffness: 100, damping: 20 }}
-    className="fixed w-full top-0 bg-white/80 backdrop-blur-md shadow-sm z-50 border-b border-slate-100"
-  >
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex justify-between items-center h-20">
-        <a href="/" className="shrink-0 flex items-center group">
-          <motion.div 
-            whileHover={{ rotate: 15, scale: 1.1 }}
-            className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3"
-          >
-            <Wrench className="text-white w-6 h-6" />
-          </motion.div>
-          <span className="text-2xl font-black text-slate-900 tracking-tight">Fix<span className="text-blue-600">Pro</span></span>
-        </a>
+const Header = () => {
+  const navigate = useNavigate();
 
-        <nav className="hidden md:flex space-x-10" aria-label="Navegación principal">
-          {['Servicios', 'Beneficios', 'Testimonios', 'FAQ'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">
-              {item}
-            </a>
-          ))}
-        </nav>
-        
-        {/* Navegación y Botón ocultos en móvil para brevedad en este ejemplo */}
-        <div className="hidden md:flex items-center">
-          <motion.a 
-            href="#contacto" 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-slate-900 text-white px-6 py-2.5 rounded-lg font-semibold shadow-md"
+  return (
+    <motion.header 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      className="fixed w-full top-0 bg-white/80 backdrop-blur-md shadow-sm z-50 border-b border-slate-100"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          <button 
+            onClick={() => window.scrollTo(0, 0)}
+            className="shrink-0 flex items-center group"
           >
-            Pedir Presupuesto
-          </motion.a>
+            <motion.div 
+              whileHover={{ rotate: 15, scale: 1.1 }}
+              className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3"
+            >
+              <Wrench className="text-white w-6 h-6" />
+            </motion.div>
+            <span className="text-2xl font-black text-slate-900 tracking-tight">URBAN<span className="text-blue-600">MANT</span></span>
+          </button>
+
+          <nav className="hidden md:flex space-x-10" aria-label="Navegación principal">
+            {['servicios', 'beneficios', 'contacto'].map((item) => (
+              <a key={item} href={`#${item}`} className="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </a>
+            ))}
+          </nav>
+          
+          <div className="hidden md:flex items-center gap-4">
+            <motion.button 
+              onClick={() => navigate('/app/dashboard')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-slate-900 text-white px-6 py-2.5 rounded-lg font-semibold shadow-md hover:bg-slate-800 transition-colors"
+            >
+              Acceder
+            </motion.button>
+          </div>
         </div>
       </div>
-    </div>
-  </motion.header>
-);
+    </motion.header>
+  );
+};
 
-const Hero = () => (
-  <section id="hero" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-16">
-      
-      <motion.div 
-        className="lg:w-1/2 text-center lg:text-left"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 font-semibold text-sm mb-6 border border-blue-100">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-          </span>
-          Servicio de emergencia 24/7
-        </motion.div>
+const Hero = () => {
+  const navigate = useNavigate();
+
+  return (
+    <section id="hero" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-16">
         
-        <motion.h1 variants={fadeInUp} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
-          Soluciones <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-500">rápidas</span> para tu tranquilidad.
-        </motion.h1>
-        
-        <motion.p variants={fadeInUp} className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-          ¿Tu equipo falló? Lo reparamos hoy mismo con garantía escrita. Sin demoras ni sorpresas en el precio.
-        </motion.p>
-        
-        <motion.div variants={fadeInUp} className="mt-10 flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start">
-          <motion.a 
-            href="#contacto" 
-            whileHover={{ scale: 1.05, boxShadow: "0px 10px 30px rgba(37, 99, 235, 0.4)" }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors"
-          >
-            Agendar Visita para Hoy
-            <motion.div
-              animate={{ x: [0, 5, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-            >
-               <ArrowRight className="w-5 h-5" />
-            </motion.div>
-          </motion.a>
-        </motion.div>
-      </motion.div>
-      
-      {/* Animación de la imagen desde la derecha */}
-      <motion.div 
-        className="lg:w-1/2 w-full relative"
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-          <motion.img 
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.4 }}
-            src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-            alt="Técnico profesional" 
-            className="object-cover w-full h-125"
-          />
-        </div>
-        
-        {/* Tarjeta flotante con animación continua (Float effect) */}
         <motion.div 
-          animate={{ y: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-          className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 md:flex"
+          className="lg:w-1/2 text-center lg:text-left"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
         >
-          <div className="bg-green-100 p-3 rounded-full">
-            <CheckCircle2 className="text-green-600 w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-slate-900">Técnicos Certificados</p>
-          </div>
+          <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 font-semibold text-sm mb-6 border border-blue-100">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </span>
+            Servicio de emergencia 24/7
+          </motion.div>
+          
+          <motion.h1 variants={fadeInUp} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
+            Soluciones <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-500">rápidas</span> para tu tranquilidad.
+          </motion.h1>
+          
+          <motion.p variants={fadeInUp} className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            ¿Tu equipo falló? Lo reparamos hoy mismo con garantía escrita. Sin demoras ni sorpresas en el precio.
+          </motion.p>
+          
+          <motion.div variants={fadeInUp} className="mt-10 flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start">
+            <motion.button 
+              onClick={() => navigate('/app/dashboard')}
+              whileHover={{ scale: 1.05, boxShadow: "0px 10px 30px rgba(37, 99, 235, 0.4)" }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors hover:bg-blue-700"
+            >
+              Acceder al Sistema
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+              >
+                 <ArrowRight className="w-5 h-5" />
+              </motion.div>
+            </motion.button>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </div>
-  </section>
-);
+        
+        {/* Animación de la imagen desde la derecha */}
+        <motion.div 
+          className="lg:w-1/2 w-full relative"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <motion.img 
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.4 }}
+              src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+              alt="Técnico profesional" 
+              className="object-cover w-full h-125"
+            />
+          </div>
+          
+          {/* Tarjeta flotante con animación continua (Float effect) */}
+          <motion.div 
+            animate={{ y: [0, -10, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 md:flex"
+          >
+            <div className="bg-green-100 p-3 rounded-full">
+              <CheckCircle2 className="text-green-600 w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-900">Técnicos Certificados</p>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 const Features = () => {
   const features = [

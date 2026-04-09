@@ -76,7 +76,7 @@ export default function NotasPage() {
 
     // Mostrar confirmación
     alert('✅ Orden de Trabajo creada exitosamente');
-    navigate('/ordenes');
+    navigate('/app/ordenes');
   };
 
   return (
@@ -91,7 +91,7 @@ export default function NotasPage() {
         </div>
         {puedoAnalizarNota && (
           <Button
-            onClick={() => navigate('/notas/crear')}
+            onClick={() => navigate('/app/notas/crear')}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
           >
             + Nueva Nota
@@ -219,7 +219,7 @@ export default function NotasPage() {
 
                 {nota.status === NOTE_STATES.COMPLETADA && (
                   <Button
-                    onClick={() => navigate(`/notas/${nota.id}`)}
+                    onClick={() => navigate(`/app/notas/${nota.id}`)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-sm"
                   >
                     Ver Detalles

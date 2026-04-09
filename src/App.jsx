@@ -35,14 +35,18 @@ const ErrorBoundary = () => (
 // Definición de Rutas
 const router = createBrowserRouter([
   {
-    path: '/',
+    index: true,
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <Home />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'app',
     element: <DashboardLayout />,
     errorElement: <ErrorBoundary />,
     children: [
-      {
-        index: true,
-        element: <Navigate to="/landingPage" replace />
-      },
       {
         path: 'dashboard',
         element: (
