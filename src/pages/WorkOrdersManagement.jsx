@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Clock, Wrench, MapPin } from 'lucide-react';
 
 // --- MOCK DATA ---
 const initialOrders = [
@@ -141,8 +142,8 @@ export default function WorkOrdersManagement() {
           </div>
         </div>
 
-        {/* Tabla de Órdenes */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        {/* Tabla de Órdenes - DESKTOP */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hidden md:block">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs md:text-sm whitespace-nowrap">
               <thead className="bg-slate-50 text-slate-600 border-b border-slate-100">
@@ -210,6 +211,88 @@ export default function WorkOrdersManagement() {
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* VISTA MÓVIL - Tarjetas */}
+        <div className="space-y-4 md:hidden">
+          {orders.map((order) => (
+            <div key={order.id} className="bg-white rounded-lg shadow-sm border border-slate-100 p-4 space-y-3">
+              {/* Header de Tarjeta */}
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <p className="font-bold text-slate-900 text-sm">{order.id}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Nota: {order.noteId}</p>
+                </div>
+                <StatusBadge status={order.status} />
+              </div>
+
+              {/* Información de Cuadrilla */}
+              <div className="border-t border-slate-100 pt-3">
+                <p className="text-xs font-medium text-slate-500 mb-1">Cuadrilla Asignada</p>
+                <p className="text-sm font-semibold text-slate-900">{order.crew}</p>
+                <p className="text-xs text-slate-600 mt-1 flex items-center gap-2">
+                  <MapPin className="w-3 h-3 text-slate-400 shrink-0" strokeWidth={2} />
+                  {order.location}
+                </p>
+              </div>
+
+              {/* Timing Info */}
+              <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-3">
+                <div>
+                  <p className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} />
+                    Inicio
+                  </p>
+                  <p className="text-xs text-slate-700 font-medium">{order.startDate}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                    <Wrench className="w-3.5 h-3.5 text-slate-400" strokeWidth={2} />
+                    Tiempo Est.
+                  </p>
+                  <p className="text-xs text-slate-700 font-medium">{order.estimatedTime}</p>
+                </div>
+              </div>
+
+              {/* Estado - Selector Pequeño */}
+              <div className="border-t border-slate-100 pt-3">
+                <p className="text-xs font-medium text-slate-500 mb-2">Estado</p>
+                <select
+                  value={order.status}
+                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                  className={`w-full text-xs font-semibold rounded-lg px-3 py-2 outline-none cursor-pointer border transition-colors
+                    ${order.status === 'PENDIENTE' ? 'bg-amber-50 text-amber-800 border-amber-200' : ''}
+                    ${order.status === 'EN EJECUCIÓN' ? 'bg-blue-50 text-blue-800 border-blue-200' : ''}
+                    ${order.status === 'FINALIZADA' ? 'bg-green-50 text-green-800 border-green-200' : ''}
+                  `}
+                  disabled={order.status === 'FINALIZADA'}
+                >
+                  <option value="PENDIENTE">PENDIENTE</option>
+                  <option value="EN EJECUCIÓN">EN EJECUCIÓN</option>
+                  <option value="FINALIZADA">FINALIZADA</option>
+                </select>
+              </div>
+
+              {/* Botones de Acción */}
+              <div className="grid grid-cols-2 gap-2 border-t border-slate-100 pt-3">
+                <button 
+                  onClick={() => setSelectedOrder(order)}
+                  className="text-slate-700 font-medium text-xs px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors cursor-pointer whitespace-nowrap"
+                >
+                  Detalle
+                </button>
+                
+                {order.status !== 'FINALIZADA' && (
+                  <button 
+                    onClick={() => handleCompleteOrder(order.id)}
+                    className="bg-green-600 text-white font-medium text-xs px-3 py-2 rounded-lg hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    Cerrar Obra
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
