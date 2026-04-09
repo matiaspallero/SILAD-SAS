@@ -1,0 +1,38 @@
+[
+  {
+    "id": "EP-2041",
+    "date": "2026-04-08T09:15:00Z",
+    "location": "Nasif Estéfano 250",
+    "type": "Poste inclinado",
+    "priority": "Alta",
+    "status": "DERIVADA",
+    "description": "Poste de madera inclinado sobre la vereda tras la tormenta de anoche. Riesgo de caída."
+  },
+  {
+    "id": "EP-2042",
+    "date": "2026-04-09T07:30:00Z",
+    "location": "Av. Güemes y San Martín",
+    "type": "Luminaria apagada",
+    "priority": "Media",
+    "status": "PENDIENTE",
+    "description": "Luminaria LED no enciende durante la noche, el sector queda completamente a oscuras."
+  },
+  {
+    "id": "EP-2043",
+    "date": "2026-04-09T08:45:00Z",
+    "location": "Ruta 38, km 732",
+    "type": "Cable cortado",
+    "priority": "Alta",
+    "status": "PENDIENTE",
+    "description": "Cable de alimentación colgando a baja altura, peligro de contacto para los peatones."
+  },
+  {
+    "id": "EP-2044",
+    "date": "2026-04-06T14:20:00Z",
+    "location": "Plaza Principal (Sector Norte)",
+    "type": "Tablero vandalizado",
+    "priority": "Media",
+    "status": "CERRADA",
+    "description": "Caja del tablero de control abierta, faltan las llaves térmicas."
+  }
+]

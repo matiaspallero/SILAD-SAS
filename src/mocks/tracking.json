@@ -1,0 +1,45 @@
+[
+  {
+    "id": "TRK-5001",
+    "orderId": "OT-5001",
+    "timeline": [
+      {
+        "status": "ASIGNADA",
+        "timestamp": "2026-04-09T09:30:00Z",
+        "author": "Despacho Central"
+      },
+      {
+        "status": "EN_TRANSITO",
+        "timestamp": "2026-04-09T09:45:00Z",
+        "author": "Cuadrilla Beta"
+      },
+      {
+        "status": "EN_EJECUCION",
+        "timestamp": "2026-04-09T10:05:00Z",
+        "author": "Cuadrilla Beta"
+      }
+    ],
+    "observations": [
+      {
+        "id": "OBS-01",
+        "timestamp": "2026-04-09T10:10:00Z",
+        "text": "Llegada al lugar. Se procede a acordonar la zona y desviar el tránsito peatonal por seguridad.",
+        "author": "Marcos Díaz"
+      },
+      {
+        "id": "OBS-02",
+        "timestamp": "2026-04-09T10:25:00Z",
+        "text": "El poste presenta daño en la base. Se requiere apuntalamiento reforzado.",
+        "author": "Marcos Díaz"
+      }
+    ],
+    "photos": [
+      {
+        "id": "P-001",
+        "url": "/assets/mocks/antes_poste_inclinado.jpg",
+        "type": "ANTES",
+        "timestamp": "2026-04-09T10:08:00Z"
+      }
+    ]
+  }
+]
