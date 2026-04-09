@@ -38,11 +38,11 @@ const Header = () => {
         <div className="flex justify-between items-center h-20">
           <button 
             onClick={() => window.scrollTo(0, 0)}
-            className="shrink-0 flex items-center group"
+            className="shrink-0 flex items-center group cursor-pointer"
           >
             <motion.div 
               whileHover={{ rotate: 15, scale: 1.1 }}
-              className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3"
+              className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3 cursor-pointer"
             >
               <Wrench className="text-white w-6 h-6" />
             </motion.div>
@@ -62,7 +62,7 @@ const Header = () => {
               onClick={() => navigate('/app/dashboard')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-slate-900 text-white px-6 py-2.5 rounded-lg font-semibold shadow-md hover:bg-slate-800 transition-colors"
+              className="bg-slate-900 text-white px-6 py-2.5 rounded-lg font-semibold shadow-md hover:bg-slate-800 transition-colors cursor-pointer"
             >
               Acceder
             </motion.button>
@@ -107,7 +107,7 @@ const Hero = () => {
               onClick={() => navigate('/app/dashboard')}
               whileHover={{ scale: 1.05, boxShadow: "0px 10px 30px rgba(37, 99, 235, 0.4)" }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors hover:bg-blue-700"
+              className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors hover:bg-blue-700 cursor-pointer"
             >
               Acceder al Sistema
               <motion.div
@@ -253,7 +253,7 @@ const ContactForm = () => (
               </select>
             </div>
 
-            <button type="submit" className="w-full bg-blue-600 text-white font-bold text-lg py-4 px-6 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-600/30 transform hover:-translate-y-1 flex justify-center items-center gap-2 mt-4">
+            <button type="submit" className="w-full bg-blue-600 text-white font-bold text-lg py-4 px-6 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-600/30 transform hover:-translate-y-1 flex justify-center items-center gap-2 mt-4 cursor-pointer">
               Enviar Solicitud
             </button>
             <p className="text-center text-xs text-slate-500 font-medium">Tus datos están seguros. No enviamos spam.</p>

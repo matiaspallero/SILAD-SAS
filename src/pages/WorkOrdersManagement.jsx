@@ -64,7 +64,7 @@ const OrderDetailModal = ({ order, onClose }) => {
             <h3 className="text-xl font-bold text-slate-800">Orden de Trabajo {order.id}</h3>
             <p className="text-sm text-slate-500">Origen: Nota {order.noteId}</p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 cursor-pointer">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
@@ -100,7 +100,7 @@ const OrderDetailModal = ({ order, onClose }) => {
         </div>
 
         <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-end">
-          <button onClick={onClose} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+          <button onClick={onClose} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
             Cerrar Detalles
           </button>
         </div>
@@ -190,7 +190,7 @@ export default function WorkOrdersManagement() {
                     <td className="px-6 py-4 text-right space-x-3">
                       <button 
                         onClick={() => setSelectedOrder(order)}
-                        className="text-slate-600 font-medium hover:text-blue-600 text-sm px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
+                        className="text-slate-600 font-medium hover:text-blue-600 text-sm px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer"
                       >
                         Detalle
                       </button>
@@ -199,7 +199,7 @@ export default function WorkOrdersManagement() {
                       {order.status !== 'FINALIZADA' && (
                         <button 
                           onClick={() => handleCompleteOrder(order.id)}
-                          className="bg-green-600 text-white font-medium hover:bg-green-700 text-sm px-3 py-1.5 rounded-lg shadow-sm transition-colors"
+                          className="bg-green-600 text-white font-medium hover:bg-green-700 text-sm px-3 py-1.5 rounded-lg shadow-sm transition-colors cursor-pointer"
                         >
                           Cerrar Obra
                         </button>

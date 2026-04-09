@@ -13,7 +13,7 @@ export default function Reportes() {
     <div className="p-8 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Reportes y Estadísticas</h1>
-        <Button variant="primary" className="flex items-center gap-2">
+        <Button variant="primary" className="flex items-center gap-2 cursor-pointer">
           <BarChart3 className="w-4 h-4" strokeWidth={1.5} />
           Generar Reporte
         </Button>
@@ -66,6 +66,7 @@ export default function Reportes() {
                     </div>
                   </div>
                   <Button 
+                    className='cursor-pointer'
                     variant="secondary" 
                     size="sm"
                     onClick={() => handleDescargarReporte(reporte.nombre)}

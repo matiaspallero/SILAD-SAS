@@ -81,7 +81,7 @@ export default function WorkTracking() {
             <button 
               onClick={advanceTimeline}
               disabled={currentStep === 4}
-              className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Avanzar Estado →
             </button>
@@ -130,7 +130,7 @@ export default function WorkTracking() {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-slate-800">Evidencias Fotográficas</h2>
-                <button className="text-sm font-medium text-blue-600 hover:text-blue-800">+ Subir Foto</button>
+                <button className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer">+ Subir Foto</button>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {/* Simulación de fotos */}
@@ -205,7 +205,7 @@ export default function WorkTracking() {
                   />
                   <button 
                     onClick={() => handleAddObservation()}
-                    className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                   </button>

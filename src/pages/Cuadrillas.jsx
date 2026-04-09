@@ -15,7 +15,7 @@ export default function Cuadrillas() {
     <div className="p-8 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Gestión de Cuadrillas</h1>
-        <Button variant="primary">+ Nueva Cuadrilla</Button>
+        <Button className='cursor-pointer' variant="primary">+ Nueva Cuadrilla</Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -56,7 +56,7 @@ export default function Cuadrillas() {
                 <td className="px-6 py-4">{cuadrilla.ubicacion}</td>
                 <td className="px-6 py-4"><Badge status={cuadrilla.estado} /></td>
                 <td className="px-6 py-4 text-right">
-                  <Button variant="secondary">Editar</Button>
+                  <Button className='cursor-pointer' variant="secondary">Editar</Button>
                 </td>
               </tr>
             ))}

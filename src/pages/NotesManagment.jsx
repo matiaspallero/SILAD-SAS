@@ -50,7 +50,7 @@ const NoteDetailModal = ({ note, onClose, onGenerateOT }) => {
             <h3 className="text-xl font-bold text-slate-800">Nota {note.id}</h3>
             <p className="text-sm text-slate-500">Registrada el {note.date}</p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 cursor-pointer">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
@@ -83,13 +83,13 @@ const NoteDetailModal = ({ note, onClose, onGenerateOT }) => {
 
         {/* Footer Modal (Acciones) */}
         <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-end space-x-3">
-          <button onClick={onClose} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+          <button onClick={onClose} className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
             Cerrar
           </button>
           {note.status === 'PENDIENTE' && (
             <button 
               onClick={() => onGenerateOT(note.id)}
-              className="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm flex items-center"
+              className="px-4 py-2 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm flex items-center cursor-pointer"
             >
               <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
               Generar Orden de Trabajo
@@ -137,7 +137,7 @@ export default function NotesManagement() {
             <h1 className="text-2xl font-bold text-slate-900">Bandeja de Notas EP/e</h1>
             <p className="text-sm text-slate-500 mt-1">Gestión y derivación de problemas reportados</p>
           </div>
-          <button className="mt-4 md:mt-0 px-4 py-2 bg-slate-900 rounded-lg text-sm font-medium text-white hover:bg-slate-800 transition-colors shadow-sm">
+          <button className="mt-4 md:mt-0 px-4 py-2 bg-slate-900 rounded-lg text-sm font-medium text-white hover:bg-slate-800 transition-colors shadow-sm cursor-pointer">
             + Registrar Nueva Nota
           </button>
         </div>
@@ -157,7 +157,7 @@ export default function NotesManagement() {
             />
           </div>
           <select 
-            className="px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            className="px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -196,7 +196,7 @@ export default function NotesManagement() {
                       <td className="px-6 py-4 text-right">
                         <button 
                           onClick={() => setSelectedNote(note)}
-                          className="text-blue-600 font-medium hover:text-blue-800 text-sm px-3 py-1 rounded hover:bg-blue-50 transition-colors"
+                          className="text-blue-600 font-medium hover:text-blue-800 text-sm px-3 py-1 rounded hover:bg-blue-50 transition-colors cursor-pointer"
                         >
                           Ver Detalle
                         </button>

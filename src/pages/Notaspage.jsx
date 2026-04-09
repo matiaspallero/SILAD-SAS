@@ -67,7 +67,7 @@ export default function NotasPage() {
           <p className="text-sm text-slate-500 mt-1">Total: {notasFiltradas.length} | Rol: {rolActual}</p>
         </div>
         {puedoAnalizarNota && (
-          <Button onClick={() => navigate('/app/notas/crear')} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
+          <Button onClick={() => navigate('/app/notas/crear')} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium cursor-pointer">
             + Nueva Nota
           </Button>
         )}
@@ -78,7 +78,7 @@ export default function NotasPage() {
           <button
             key={estado}
             onClick={() => setFiltroEstado(estado)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium ${filtroEstado === estado ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium cursor-pointer ${filtroEstado === estado ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200'}`}
           >
             {estado}
           </button>
@@ -124,7 +124,7 @@ export default function NotasPage() {
                 {puedoAnalizarNota && nota.status === 'Registrada' && (
                   <Button
                     onClick={() => handleAdelantarEstado(nota.id, nota.status)}
-                    className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-medium text-sm"
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-medium text-sm cursor-pointer" 
                   >
                     Enviar a Análisis
                   </Button>
@@ -133,7 +133,7 @@ export default function NotasPage() {
                 {puedoAnalizarNota && nota.status === 'Pendiente Análisis' && (
                   <Button
                     onClick={() => handleAdelantarEstado(nota.id, nota.status)}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded font-medium text-sm"
+                    className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded font-medium text-sm cursor-pointer"
                   >
                     Marcar Analizada
                   </Button>
@@ -143,14 +143,14 @@ export default function NotasPage() {
                   <>
                     <Button
                       onClick={() => handleGenerarOT(nota)}
-                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium text-sm flex items-center gap-2"
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium text-sm flex items-center gap-2 cursor-pointer"
                     >
                       <CheckCircle className="w-4 h-4" strokeWidth={1.5} />
                       Generar O.T.
                     </Button>
                     <Button
                       onClick={() => handleAdelantarEstado(nota.id, nota.status)}
-                      className="bg-slate-400 hover:bg-slate-500 text-white px-4 py-2 rounded font-medium text-sm"
+                      className="bg-slate-400 hover:bg-slate-500 text-white px-4 py-2 rounded font-medium text-sm cursor-pointer"
                     >
                       Saltar
                     </Button>
@@ -160,7 +160,7 @@ export default function NotasPage() {
                 {nota.status === 'Completada' && (
                   <Button
                     onClick={() => navigate(`/app/notas/${nota.id}`)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-sm cursor-pointer"
                   >
                     Ver Detalles
                   </Button>
